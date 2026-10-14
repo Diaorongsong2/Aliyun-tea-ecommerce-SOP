@@ -1,0 +1,14 @@
+# 商品管理服务 Service
+# 仓库内路径：tea-yaml/teaadmin-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: teaadmin-service
+spec:
+  ports:
+    - protocol: TCP
+      port: 30092
+      targetPort: 30092
+  selector:
+    app: teaadmin-jar
+  type: ClusterIP

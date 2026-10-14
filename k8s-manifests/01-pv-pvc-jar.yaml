@@ -1,0 +1,32 @@
+# 共享 jar 包的 PV / PVC
+# 仓库内路径：tea-yaml/pv-pvc-jar.yaml
+#
+# 四个后端服务的 jar 都放在 NFS 的 /project/jar 下，共用一个 PV。
+# 后端 Pod 只读挂载这个目录，因此换包不需要重建镜像。
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-jar
+spec:
+  volumeMode: Filesystem
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    server: 172.18.176.252
+    path: /project/jar
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-jar
+spec:
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 2Gi

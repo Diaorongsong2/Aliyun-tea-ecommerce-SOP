@@ -1,0 +1,50 @@
+# 商品管理服务 tea-admin（端口 30092）
+# 仓库内路径：tea-yaml/teaadmin-jar.yaml
+#
+# 这个服务要同时挂 jar 和图片两个 PVC：后台要往图片目录里写商品封面。
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: teaadmin-jar
+spec:
+  selector:
+    matchLabels:
+      app: teaadmin-jar
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: teaadmin-jar
+    spec:
+      volumes:
+        - name: teaadmin-jar
+          persistentVolumeClaim:
+            claimName: pvc-jar
+        - name: image
+          persistentVolumeClaim:
+            claimName: image
+      containers:
+        - name: teaadmin-jar
+          image: harbor:443/tea/jar:base
+          env:
+            - name: TZ
+              valueFrom:
+                configMapKeyRef:
+                  name: timezone
+                  key: timezone
+          command: ["/bin/bash"]
+          args:
+            - -c
+            - |
+              java -Dfile.encoding=utf-8 -jar /project/jar/tea-admin-main-1.0.0-SNAPSHOT.jar \
+              -Xmx128M -Xms128M -Xmn64m -XX:MaxMetaspaceSize=128M -XX:MetaspaceSize=128M \
+              --server.port=30092 --spring.profiles.active=vm
+          ports:
+            - protocol: TCP
+              containerPort: 30092
+          volumeMounts:
+            - name: teaadmin-jar
+              mountPath: /project/jar
+            - name: image
+              mountPath: /home/images/vm/
+      restartPolicy: Always

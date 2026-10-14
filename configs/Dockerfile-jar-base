@@ -1,0 +1,9 @@
+# jar 运行时基础镜像
+# 仓库内路径：/root/jar-package/Dockerfile
+#
+# 说明：这里只装 JDK，业务 jar 不打进镜像。
+# 四个后端服务共用这一个镜像（harbor:443/tea/jar:base），jar 包通过 NFS 挂载进容器。
+# 换包时只替换 NFS 上的 jar，重启 Pod 即生效，不用重新构建、推送镜像。
+FROM rockylinux:8.5
+RUN yum -y install java-1.8.0-openjdk java-1.8.0-openjdk-devel && yum clean all
+CMD ["/bin/bash"]

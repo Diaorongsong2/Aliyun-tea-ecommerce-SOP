@@ -1,0 +1,32 @@
+# 附件中心服务 attach-server —— 应用配置（profile: vm）
+# 仓库内路径：attach-server/attach-server-main/src/main/resources/application-vm.yaml
+spring:
+  # 上传文件大小限制，和 nginx 的 client_max_body_size 保持一致
+  http:
+    multipart:
+      enabled: true
+      max-file-size: 30MB
+      max-request-size: 300MB
+  # 数据源
+  datasource:
+    url: jdbc:mysql://<RDS-MySQL-内网地址>:3306/tarena_tp_tea?useSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true&allowPublicKeyRetrieval=true
+    username: teauser
+    password: <YOUR_PASSWORD>
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      minimum-idle: 1
+      auto-commit: true
+      idle-timeout: 600000
+      minimum: 5
+      max-lifetime: 1800000
+      connection-timeout: 120000
+      connection-test-query: SELECT 1 FROM DUAL
+
+# 图片附件：容器内是从 NFS 挂进来的目录，对外前缀走 SLB
+image_path: /home/images/vm/tea_attach/
+url: http://<SLB-公网IP>:30080/tea_attach/
+
+# Dubbo 走 Nacos 注册中心
+dubbo:
+  address: nacos://172.18.176.13:8848
+  namespace: linux

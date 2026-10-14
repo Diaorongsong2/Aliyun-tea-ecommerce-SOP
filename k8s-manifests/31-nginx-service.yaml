@@ -1,0 +1,26 @@
+# 前端 nginx 的 Service：三个端口都用 NodePort，交给 SLB 转发
+# 仓库内路径：tea-yaml/nginx-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  ports:
+    - name: image-30080
+      protocol: TCP
+      port: 30080
+      targetPort: 30080
+      nodePort: 30080
+    - name: teaserver-30091
+      protocol: TCP
+      port: 30091
+      targetPort: 30091
+      nodePort: 30091
+    - name: teaadmin-30092
+      protocol: TCP
+      port: 30092
+      targetPort: 30092
+      nodePort: 30092
+  selector:
+    app: nginx
+  type: NodePort

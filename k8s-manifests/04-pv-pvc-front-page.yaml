@@ -1,0 +1,29 @@
+# 商品展示页面（front-page）静态资源的 PV / PVC
+# 仓库内路径：tea-yaml/pv-pvc-frontpage.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: front-page
+spec:
+  volumeMode: Filesystem
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    server: 172.18.176.252
+    path: /project/page/front-page/dist/
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: front-page
+spec:
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 2Gi

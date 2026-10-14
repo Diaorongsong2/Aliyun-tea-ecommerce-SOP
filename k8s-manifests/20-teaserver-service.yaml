@@ -1,0 +1,14 @@
+# 商品展示服务 Service
+# 仓库内路径：tea-yaml/teaserver-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: teaserver-service
+spec:
+  ports:
+    - protocol: TCP
+      port: 30091
+      targetPort: 30091
+  selector:
+    app: teaserver-jar
+  type: ClusterIP

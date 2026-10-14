@@ -1,0 +1,40 @@
+# 验证中心服务 passport —— 应用配置（profile: vm）
+# 仓库内路径：passport-provider/src/main/resources/application-vm.yml
+spring:
+  # 验证码单独一个库，和业务库隔离
+  datasource:
+    url: jdbc:mysql://<RDS-MySQL-内网地址>:3306/cs_mall_passport?useSSL=false&useUnicode=true&allowPublicKeyRetrieval=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    username: cs_mall_user
+    password: <YOUR_PASSWORD>
+  # 验证码缓存单独占一个 db，避免和业务 key 混在一起
+  redis:
+    host: <云Redis-内网地址>
+    port: 6379
+    password: "<YOUR_PASSWORD>"
+    database: 9
+    jedis:
+      pool:
+        max-active: 8
+        min-idle: 5
+        max-idle: 8
+        max-wait: PT15M
+        time-between-eviction-runs: PT15M
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 172.18.176.13:8848
+        namespace: linux
+        enabled: true
+        register-enabled: true
+  application:
+    name: passport-server
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+
+logging:
+  level:
+    com.tarena.passport: trace
+  file:
+    name: logs/passport.log

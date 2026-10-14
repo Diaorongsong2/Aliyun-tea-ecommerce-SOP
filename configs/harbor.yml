@@ -1,0 +1,14 @@
+# Harbor 配置：只列出相对 harbor.yml.tmpl 的改动项
+# 仓库内路径：/root/harbor/harbor.yml
+hostname: harbor
+
+# 启用 HTTPS（证书自签，见 SOP 第 3 章）
+https:
+  # https port for harbor, default is 443
+  port: 443
+  # The path of cert and key files for nginx
+  certificate: /root/harbor/tls/cert.crt
+  private_key: /root/harbor/tls/cert.key
+
+# 初始管理员口令，首次登录后应立刻改掉
+harbor_admin_password: <YOUR_PASSWORD>

@@ -1,0 +1,67 @@
+# 前端 nginx：一个 Pod 同时对外提供三个站点
+# 仓库内路径：tea-yaml/nginx.yaml
+#
+# 依赖一个名为 nginx 的 ConfigMap，由 configs/nginx.conf 生成：
+#   kubectl create configmap nginx --from-file=nginx.conf
+#
+# 三个站点的静态资源全部来自 NFS：
+#   30080 —— 商品图片（/home/images/vm）
+#   30091 —— 商品展示页面（front-page/dist）+ 反代 teaserver / passport
+#   30092 —— 商品管理页面（admin-page/dist）+ 反代 teaadmin / passport
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      volumes:
+        - name: nginx
+          configMap:
+            name: nginx
+        - name: admin-page
+          persistentVolumeClaim:
+            claimName: admin-page
+        - name: front-page
+          persistentVolumeClaim:
+            claimName: front-page
+        - name: image
+          persistentVolumeClaim:
+            claimName: image
+      containers:
+        - name: nginx
+          image: registry.cn-hangzhou.aliyuncs.com/acs-sample/nginx
+          env:
+            - name: TZ
+              valueFrom:
+                configMapKeyRef:
+                  name: timezone
+                  key: timezone
+          ports:
+            - name: image-30080
+              protocol: TCP
+              containerPort: 30080
+            - name: teaserver-30091
+              protocol: TCP
+              containerPort: 30091
+            - name: teaadmin-30092
+              protocol: TCP
+              containerPort: 30092
+          volumeMounts:
+            - name: nginx
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+            - name: admin-page
+              mountPath: /project/page/admin-page/dist/
+            - name: front-page
+              mountPath: /project/page/front-page/dist/
+            - name: image
+              mountPath: /home/images/vm/
+      restartPolicy: Always

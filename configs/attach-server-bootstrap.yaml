@@ -1,0 +1,33 @@
+# 附件中心服务 attach-server —— 多环境 Nacos 引导配置
+# 仓库内路径：attach-server/attach-server-main/src/main/resources/bootstrap.yaml
+#
+# 两个 profile：
+#   dev —— 课程提供的远端起验证环境（公网地址已隐去）
+#   vm  —— 本次实验实际使用的环境，注册到自建的 Nacos 上
+spring:
+  profiles:
+    active: dev
+
+---
+spring:
+  profiles: dev
+  cloud:
+    nacos:
+      server-addr: <dev-Nacos-公网IP>:8848
+      discovery:
+        enabled: true
+        register-enabled: true
+        server-addr: <dev-Nacos-公网IP>:8848
+        namespace: <dev命名空间ID>
+
+---
+spring:
+  profiles: vm
+  cloud:
+    nacos:
+      server-addr: 172.18.176.13:8848
+      discovery:
+        enabled: true
+        register-enabled: true
+        server-addr: 172.18.176.13:8848
+        namespace: linux

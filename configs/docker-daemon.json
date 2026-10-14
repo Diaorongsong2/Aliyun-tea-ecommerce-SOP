@@ -1,0 +1,5 @@
+{
+  "_comment": "仓库内路径：/etc/docker/daemon.json。绕过 Harbor 自签证书，并把 Harbor 配成拉取加速源。",
+  "registry-mirrors": ["https://harbor:443"],
+  "insecure-registries": ["harbor:443"]
+}

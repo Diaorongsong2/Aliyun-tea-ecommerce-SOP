@@ -1,0 +1,8 @@
+# 时区 ConfigMap：保证 Pod 内时间和宿主机一致
+# 仓库内路径：tea-yaml/tz.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: timezone
+data:
+  timezone: "Asia/Shanghai"

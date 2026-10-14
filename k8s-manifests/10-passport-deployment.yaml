@@ -1,0 +1,48 @@
+# 验证中心服务 passport（端口 30094）
+# 仓库内路径：tea-yaml/passport-jar.yaml
+#
+# 复用 jar:base 镜像 + pvc-jar，容器里跑 NFS 上的 jar 包。
+# 注：原文 args 里 -XX:MaxMetaspaceSize=128M 与 -XX:MetaspaceSize=128M 之间少了一个空格，
+#     JVM 会解析失败，这里已补上。
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: passport-jar
+spec:
+  selector:
+    matchLabels:
+      app: passport-jar
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: passport-jar
+    spec:
+      volumes:
+        - name: passport-jar
+          persistentVolumeClaim:
+            claimName: pvc-jar
+      containers:
+        - name: passport-jar
+          # harbor 这个域名靠各节点 /etc/hosts 解析到 Harbor 服务器
+          image: harbor:443/tea/jar:base
+          env:
+            - name: TZ
+              valueFrom:
+                configMapKeyRef:
+                  name: timezone
+                  key: timezone
+          command: ["/bin/bash"]
+          args:
+            - -c
+            - |
+              java -Dfile.encoding=utf-8 -jar /project/jar/passport-provider-1.0-SNAPSHOT.jar \
+              -Xmx128M -Xms128M -Xmn64m -XX:MaxMetaspaceSize=128M -XX:MetaspaceSize=128M \
+              --server.port=30094 --spring.profiles.active=vm
+          ports:
+            - protocol: TCP
+              containerPort: 30094
+          volumeMounts:
+            - name: passport-jar
+              mountPath: /project/jar
+      restartPolicy: Always

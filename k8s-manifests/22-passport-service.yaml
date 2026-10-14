@@ -1,0 +1,14 @@
+# 验证中心服务 Service
+# 仓库内路径：tea-yaml/passport-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: passport-service
+spec:
+  ports:
+    - protocol: TCP
+      port: 30094
+      targetPort: 30094
+  selector:
+    app: passport-jar
+  type: ClusterIP

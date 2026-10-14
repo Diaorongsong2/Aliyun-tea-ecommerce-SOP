@@ -1,0 +1,45 @@
+# 附件中心服务 attach-server（端口 30093）
+# 仓库内路径：tea-yaml/attach-jar.yaml
+#
+# 商品图片上传就是走这个服务。Deployment 名沿用部署时的 attache-jar。
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: attache-jar
+spec:
+  selector:
+    matchLabels:
+      app: attache-jar
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: attache-jar
+    spec:
+      volumes:
+        - name: attach-jar
+          persistentVolumeClaim:
+            claimName: pvc-jar
+      containers:
+        - name: attache-jar
+          image: harbor:443/tea/jar:base
+          env:
+            - name: TZ
+              valueFrom:
+                configMapKeyRef:
+                  name: timezone
+                  key: timezone
+          command: ["/bin/bash"]
+          args:
+            - -c
+            - |
+              java -Dfile.encoding=utf-8 -jar /project/jar/attach-server-main-1.0.0-SNAPSHOT.jar \
+              -Xmx128M -Xms128M -Xmn64m -XX:MaxMetaspaceSize=128M -XX:MetaspaceSize=128M \
+              --server.port=30093 --spring.profiles.active=vm
+          ports:
+            - protocol: TCP
+              containerPort: 30093
+          volumeMounts:
+            - name: attach-jar
+              mountPath: /project/jar
+      restartPolicy: Always
