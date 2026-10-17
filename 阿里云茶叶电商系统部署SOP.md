@@ -2,8 +2,6 @@
 
 **文档版本**：V1.0
 
-**记录人**：刁荣松
-
 **部署目标**：在阿里云上从零搭出一套茶叶电商系统（学茶网）。自建 Harbor 私有镜像仓库、Nacos 注册中心、RocketMQ 消息队列，数据层用云 RDS MySQL 和云 Redis，业务跑在 ACK 容器集群上，前端静态资源和业务 jar 走 NFS 共享挂载，最后用 SLB 对外发布。
 
 **部署环境**：阿里云 ECS（Rocky Linux 8.5 / 8.9 x86_64）、ACK v1.32.1-aliyun.1、Harbor 2.5.3、Nacos 2.0.2、RocketMQ 4.9.4、nginx、containerd
