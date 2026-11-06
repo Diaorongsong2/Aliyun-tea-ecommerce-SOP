@@ -30,7 +30,7 @@ Harbor 私有镜像仓库，业务镜像构建完成后推到这里，ACK 再从
 
 ## 一、这套系统长什么样
 
-一个 Spring Cloud 微服务后端 + 两个 Vue 前端的茶叶商城。硬件是四台自建 ECS 加一组云服务。
+一个 Spring Cloud 微服务后端 + 两个 Vue 前端的茶叶商城。硬件是四台自建 ECS、三台 ACK 托管节点，一共 7 台云主机，另外挂了 RDS、Redis、SLB 几个云服务。
 
 | 角色 | 地址 | 配置 | 跑什么 |
 |---|---|---|---|
@@ -39,7 +39,7 @@ Harbor 私有镜像仓库，业务镜像构建完成后推到这里，ACK 再从
 | nacos | 172.18.176.13 | 2C2G | Nacos 2.0.2 单机模式（8848） |
 | rocketmq | 172.18.176.14 | 2C2G | RocketMQ 4.9.4 NameServer + Broker（9876） |
 
-云服务这边：ACK 三节点托管集群跑业务，RDS MySQL 承载业务库 / 验证码库 / Nacos 注册库，云 Redis 做缓存和验证码，SLB 做公网入口。
+云服务这边：ACK 那三台跑业务，RDS MySQL 承载业务库 / 验证码库 / Nacos 注册库，云 Redis 做缓存和验证码，SLB 做公网入口。
 
 请求链路：
 
