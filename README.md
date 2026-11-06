@@ -16,15 +16,15 @@
 
 商品管理后台，商品数据从 RDS MySQL 读，封面图走 NFS 挂载：
 
-![商品管理后台](images/05-商品管理后台-商品列表.png)
+![商品管理后台](images/05-product-admin.png)
 
 商城前台登录页，前端静态资源由 Nginx 提供：
 
-![商城前台登录页](images/04-商城前台-登录页.png)
+![商城前台登录页](images/04-shop-login.png)
 
 Harbor 私有镜像仓库，业务镜像构建完成后推到这里，ACK 再从这拉：
 
-![Harbor 新建项目](images/02-harbor-创建tea项目.png)
+![Harbor 新建项目](images/02-harbor-new-project.png)
 
 ---
 
